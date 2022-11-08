@@ -67,6 +67,29 @@ const OtpInput = (props: Props) => {
     }
   };
 
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const current = e.currentTarget;
+    if (e.key === "ArrowLeft" || e.key === "Backspace") {
+      const prev = current.previousElementSibling as HTMLInputElement | null;
+      prev?.focus();
+      prev?.setSelectionRange(0, 1);
+      return;
+    }
+
+    if (e.key === "ArrowRight") {
+      const prev = current.nextSibling as HTMLInputElement | null;
+      prev?.focus();
+      prev?.setSelectionRange(0, 1);
+      return;
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const val = e.clipboardData.getData("text").substring(0, size);
+    onChange(val);
+  };
+
   return (
     <div className="flex gap-2">
       {/* Map through the array and render input components */}
@@ -89,6 +112,8 @@ const OtpInput = (props: Props) => {
             maxLength={6}
             value={value.at(index) ?? ""}
             onChange={(e) => handleInputChange(e, index)}
+            onKeyUp={handleKeyUp}
+            onPaste={handlePaste}
           />
         );
       })}
