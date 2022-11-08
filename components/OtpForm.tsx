@@ -17,7 +17,7 @@ const OtpForm = () => {
         })
         .then((otp) => {
           const _otp = otp as unknown as string;
-          console.log(_otp);
+          alert(JSON.stringify(_otp));
           setOtp(_otp);
           form.submit();
         })
