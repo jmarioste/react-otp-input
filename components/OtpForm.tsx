@@ -7,11 +7,14 @@ const OtpForm = () => {
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const ref = useRef<HTMLFormElement>(null);
-  const acRef = useRef<AbortController>(new AbortController());
   useEffect(() => {
     if ("OTPCredential" in window) {
       const form = ref.current!;
-      const ac = acRef.current;
+      const ac = new AbortController();
+      const handler = () => {
+        ac.abort();
+      };
+      form.addEventListener("submit", handler);
       navigator.credentials
         .get({
           // @ts-ignore
@@ -30,7 +33,6 @@ const OtpForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    acRef.current.abort();
     try {
       const response = await fetch(`/api/verify-otp`, {
         headers: {
