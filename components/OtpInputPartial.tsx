@@ -103,7 +103,10 @@ const OtpInput = (props: Props) => {
              * Allows the user to override the classname for a different styling
              */
             className={
-              className || `input input-bordered px-0 text-center w-14 h-16`
+              className ||
+              `input input-bordered px-0 
+              w-10 h:14 md:w-14 md:h-16 
+              text-xl md:text-3xl text-center`
             }
             type="text"
             inputMode="numeric"
