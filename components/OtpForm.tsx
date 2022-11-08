@@ -5,6 +5,7 @@ import classNames from "classnames";
 const OtpForm = () => {
   const [otp, setOtp] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [message, setMessage] = useState("");
   const ref = useRef<HTMLFormElement>(null);
   const acRef = useRef<AbortController>(new AbortController());
   useEffect(() => {
@@ -46,9 +47,9 @@ const OtpForm = () => {
       const result: Result = await response.json();
       setSubmitting(false);
       if (result.success) {
-        alert("You are now verified.");
+        setMessage("You are now verified.");
       } else {
-        alert(result.message);
+        setMessage(result.message ?? "Invalid code");
         setOtp("");
       }
     } catch (e) {
@@ -59,6 +60,15 @@ const OtpForm = () => {
       setSubmitting(false);
     }
   };
+
+  if (message) {
+    return (
+      <div>
+        <p className="text-xl">{message}</p>
+        <button onClick={() => setMessage("false")}>Reset</button>
+      </div>
+    );
+  }
   return (
     <form
       className="card shadow-md bg-base-200"
