@@ -15,11 +15,9 @@ const OtpForm = () => {
           otp: { transport: ["sms"] },
           signal: ac.signal,
         })
-        .then((otp) => {
-          const _otp = otp as unknown as string;
-          alert(`Received otp: ${JSON.stringify(_otp)}`);
-          setOtp(_otp);
-          form.submit();
+        .then((otp: any) => {
+          setOtp(otp.code);
+          alert("submitting form");
         })
         .catch((err) => {
           alert(JSON.stringify(err.message));
