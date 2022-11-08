@@ -16,12 +16,13 @@ const OtpForm = () => {
           signal: ac.signal,
         })
         .then((otp: any) => {
+          console.log(otp);
           setOtp(otp.code);
           alert("submitting form");
         })
         .catch((err) => {
-          alert(JSON.stringify(err.message));
           console.log(err);
+          alert(JSON.stringify(err.message));
         });
     }
   }, []);
