@@ -22,6 +22,7 @@ const OtpForm = () => {
           form.submit();
         })
         .catch((err) => {
+          alert(JSON.stringify(err.message));
           console.log(err);
         });
     }
