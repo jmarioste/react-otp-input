@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import { useState } from "react";
-import Modal from "../components/Modal";
 import OtpInput from "../components/OtpInput";
 
 const Home: NextPage = () => {
