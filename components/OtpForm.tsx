@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import OtpInput from "components/OtpInputPartial";
+import OtpInput from "components/OtpInput";
 import classNames from "classnames";
 
 const OtpForm = () => {
