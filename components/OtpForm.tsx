@@ -65,7 +65,13 @@ const OtpForm = () => {
     return (
       <div className="flex flex-col items-stretch gap-2">
         <p className="text-xl">{message}</p>
-        <button onClick={() => setMessage("")} className="btn btn-primary">
+        <button
+          onClick={() => {
+            setMessage("");
+            setOtp("");
+          }}
+          className="btn btn-primary"
+        >
           Reset Form
         </button>
       </div>
