@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import OtpInput from "components/OtpInputPartial";
+import classNames from "classnames";
 
 const OtpForm = () => {
   const [otp, setOtp] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const ref = useRef<HTMLFormElement>(null);
   const acRef = useRef<AbortController>(new AbortController());
   useEffect(() => {
@@ -16,25 +18,51 @@ const OtpForm = () => {
           signal: ac.signal,
         })
         .then((otp: any) => {
-          console.log(otp);
           setOtp(otp.code);
-          alert("submitting form");
+          form.submit();
         })
         .catch((err) => {
           console.log(err);
-          alert(JSON.stringify(err.message));
         });
     }
   }, []);
-
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    acRef.current.abort();
+    try {
+      const response = await fetch(`/api/verify-otp`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({ code: otp }),
+      });
+      type Result = {
+        success: boolean;
+        message?: string;
+      };
+      const result: Result = await response.json();
+      setSubmitting(false);
+      if (result.success) {
+        alert("You are now verified.");
+      } else {
+        alert(result.message);
+        setOtp("");
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        alert(e.message);
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
   return (
     <form
       className="card shadow-md bg-base-200"
-      onSubmit={async (e) => {
-        e.preventDefault();
-        console.log(`Submitted OTP - ${otp} `);
-        acRef.current.abort();
-      }}
+      onSubmit={handleSubmit}
       ref={ref}
     >
       <div className="card-body items-stretch text-center">
@@ -48,7 +76,13 @@ const OtpForm = () => {
             setOtp(val);
           }}
         />
-        <button className="btn btn-primary mt-2" type="submit">
+        <button
+          className={classNames({
+            "btn btn-primary": true,
+            loading: submitting,
+          })}
+          type="submit"
+        >
           Verify OTP
         </button>
       </div>
