@@ -43,6 +43,30 @@ const OtpInput = (props: Props) => {
 
   // Create an array based on the size.
   const arr = new Array(size).fill("-");
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const elem = e.target;
+    const val = e.target.value;
+
+    // check if the value is valid
+    if (!validationPattern.test(val) && val !== "") return;
+
+    // change the value using onChange props
+    const valueArr = value.split("");
+    valueArr[index] = val;
+    const newVal = valueArr.join("").slice(0, 6);
+    onChange(newVal);
+
+    //focus the next element if there's a value
+    if (val) {
+      const next = elem.nextElementSibling as HTMLInputElement | null;
+      next?.focus();
+    }
+  };
+
   return (
     <div className="flex gap-2">
       {/* Map through the array and render input components */}
@@ -64,6 +88,7 @@ const OtpInput = (props: Props) => {
             pattern={validationPattern.source}
             maxLength={6}
             value={value.at(index) ?? ""}
+            onChange={(e) => handleInputChange(e, index)}
           />
         );
       })}
